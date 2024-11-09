@@ -2,21 +2,15 @@
 
 const express = require('express');
 const router = express.Router();
+const users = require('../userdata.js');
 
-const users = [
-    { username: 'Chewaboo Pimlebean', password: '123' },
-    { username: 'Gumberry Bubbleyeti', password: '321' },
-];
-
-const userPreferences = {
-    'Chewaboo Pimlebean': { username: 'Chewaboo Pimlebean', password: '123', background: '/assets/img/background.png' },
-    'Gumberry Bubbleyeti': { username: 'Gumberry Bubbleyeti', password: '321', background: '/assets/img/background.png' }
-};
+// Utility function to find user by username
+const findUser = (username) => users.find(user => user.username === username);
 
 router.post('/login', (req, res) => {
     const { username, password } = req.body;
 
-    const user = users.find((user) => user.username === username);
+    const user = findUser(username);
 
     if (!user) {
         return res.status(401).json({ message: 'Username not found' });
@@ -52,8 +46,12 @@ router.post('/savePreferences', (req, res) => {
         return res.status(401).json({ message: 'Not logged in' });
     }
 
-    const username = req.session.user.username;
-    userPreferences[username] = { ...userPreferences[username], ...req.body }; // Update only provided fields
+    const user = findUser(req.session.user.username);
+    if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+    }
+
+    user.preferences = { ...user.preferences, ...req.body }; // Update only provided fields
     res.json({ success: true });
 });
 
@@ -62,9 +60,12 @@ router.get('/getPreferences', (req, res) => {
         return res.status(401).json({ message: 'Not logged in' });
     }
 
-    const username = req.session.user.username;
-    const preferences = userPreferences[username] || { background: '', taskbarApps: [] };
-    res.json(preferences);
+    const user = findUser(req.session.user.username);
+    if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.json(user.preferences || { background: '', taskbarApps: [] });
 });
 
 router.post('/verifyPassword', (req, res) => {
@@ -73,7 +74,7 @@ router.post('/verifyPassword', (req, res) => {
     }
 
     const { password } = req.body;
-    const user = users.find((user) => user.username === req.session.user.username);
+    const user = findUser(req.session.user.username);
 
     if (user && user.password === password) {
         res.json({ success: true });

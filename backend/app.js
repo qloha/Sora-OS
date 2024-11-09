@@ -8,9 +8,8 @@ const app = express();
 // Middleware for handling JSON data
 app.use(express.json());
 
-// Configure session
 app.use(session({
-    secret: 'yourSecretKey',
+    secret: 'qlohasillyhehehe',
     resave: false,
     saveUninitialized: true,
 }));
