@@ -1,0 +1,96 @@
+/* lock.css */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to bottom, #002f4b, #dc4225);
+    color: #fff;
+}
+
+.lock-screen {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.lock-box {
+    text-align: center;
+    width: 300px;
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.lock-box h2 {
+    font-size: 1.8em;
+    margin-bottom: 10px;
+    color: #fff;
+}
+
+.lock-box p {
+    margin-bottom: 20px;
+    color: #ddd;
+}
+
+input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    font-size: 1em;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    font-size: 1em;
+    color: #fff;
+    background-color: #0078d7;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #005a9e;
+}
+
+#logoutButton {
+    background-color: #444;
+    margin-top: 15px;
+}
+
+#logoutButton:hover {
+    background-color: #333;
+}
+
+.error-message {
+    display: none;
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #ff4c4c;
+    color: white;
+    border-radius: 5px;
+    font-size: 0.9em;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Error message fade-in animation */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}

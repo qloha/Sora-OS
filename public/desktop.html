@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Desktop - Sora OS</title>
+  <link data-rh="true" rel="icon" type="image/png" sizes="16x16" href="/assets/img/sora.png">
+  <link rel="stylesheet" href="/desktop.css">
+</head>
+<body>
+<div class="desktop">
+  <div class="icons"></div> <!-- Desktop icons will be rendered here -->
+
+  <!-- Settings App -->
+  <div id="settingsApp" class="settings-app" style="display: none;">
+    <div class="settings-sidebar">
+      <div class="sidebar-item" onclick="showSettingsContent('general')">General</div>
+      <div class="sidebar-item" onclick="showSettingsContent('desktop')">Desktop</div>
+      <div class="sidebar-item" onclick="closeSettingsApp()">Close</div>
+    </div>
+    <div class="settings-content">
+      <div id="general" class="content-section">
+        <h2>General Settings</h2>
+        <label for="username">Username:</label>
+        <input type="text" id="username" placeholder="Enter your name">
+        <label for="password">Password:</label>
+        <input type="password" id="password" placeholder="Enter new password">
+        <button onclick="saveGeneralSettings()">Save</button>
+        <div id="generalFeedback" class="feedback-message"></div> <!-- Feedback message here -->
+      </div>
+      <div id="desktop" class="content-section" style="display: none;">
+        <h2>Desktop Settings</h2>
+        <label for="background">Desktop Background URL:</label>
+        <input type="text" id="background" placeholder="Enter image URL">
+        <button onclick="applyDesktopSettings()">Apply</button>
+        <div id="desktopFeedback" class="feedback-message"></div> <!-- Feedback message here -->
+      </div>
+    </div>
+  </div>
+
+  <div class="taskbar">
+    <div class="taskbar-start" onclick="toggleStartMenu()">
+      <img src="/assets/img/sora.png" alt="Start" class="start-icon">
+    </div>
+
+    <div class="taskbar-center">
+    </div>
+
+    <div class="taskbar-clock">
+      <span id="clock"></span><br>
+      <span id="date"></span>
+    </div>
+  </div>
+
+  <div id="startMenu" class="start-menu">
+    <div class="start-menu-content"></div> <!-- Start menu items will be rendered here -->
+  </div>
+</div>
+
+<script src="/desktop.js"></script>
+</body>
+</html>

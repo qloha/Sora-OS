@@ -1,0 +1,17 @@
+{
+  "name": "Sora-os",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "qloha",
+  "license": "ISC",
+  "description": "School IT bad",
+  "dependencies": {
+    "@titaniumnetwork-dev/ultraviolet": "https://github.com/titaniumnetwork-dev/Ultraviolet/releases/download/v3.2.7/titaniumnetwork-dev-ultraviolet-3.2.7.tgz",
+    "express": "^4.21.1",
+    "express-session": "^1.18.1"
+  }
+}

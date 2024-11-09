@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Sora OS</title>
+    <link data-rh="true" rel="icon" type="image/png" sizes="16x16" href="/assets/img/sora.png">
+    <link rel="stylesheet" href="/login.css">
+</head>
+<body>
+<div class="login-screen">
+    <div class="login-box">
+        <div class="avatar">
+            <img src="/assets/img/user.png" alt="User">
+        </div>
+        <div class="username">Login</div>
+
+        <button id="backButton" class="back-button">Back to Home</button>
+
+        <form id="loginForm" action="/api/users/login" method="POST">
+            <input type="username" name="username" placeholder="Enter your username" required>
+            <input type="password" name="password" placeholder="Enter your password" required>
+            <button type="submit">Login</button>
+        </form>
+        <div id="error-message" class="error-message"></div>
+    </div>
+</div>
+
+<script src="/login.js"></script>
+</body>
+</html>
