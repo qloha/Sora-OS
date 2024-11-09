@@ -25,13 +25,13 @@ This is a work in progress operating system. All features are subject to change.
 Clone the project
 
 ```bash
-  git clone https://github.com/qloha/sora-os
+  git clone https://github.com/qloha/Sora-OS
 ```
 
 Go to the project directory
 
 ```bash
-  cd my-project
+  cd Sora-OS
 ```
 
 Install dependencies
