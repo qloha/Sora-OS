@@ -3,52 +3,62 @@ const path = require('path');
 const session = require('express-session');
 const userRoutes = require('./routes/users');
 
-const app = express();
+(async () => {
+    const chalk = (await import('chalk')).default;
 
-// Middleware for handling JSON data
-app.use(express.json());
+    const app = express();
 
-app.use(session({
-    secret: 'qlohasillyhehehe',
-    resave: false,
-    saveUninitialized: true,
-}));
+    app.use(express.json());
 
-// Serve static files
-app.use(express.static(path.join(__dirname, '../public')));
+    app.use(session({
+        secret: 'qlohasillyhehehe',
+        resave: false,
+        saveUninitialized: true,
+    }));
 
-// Middleware to check if user is authenticated
-function isAuthenticated(req, res, next) {
-    if (req.session.user && req.session.user.loggedIn) {
-        return next();
-    } else {
-        res.redirect('/login');
+    app.use(express.static(path.join(__dirname, '../public')));
+
+    function isAuthenticated(req, res, next) {
+        if (req.session.user && req.session.user.loggedIn) {
+            return next();
+        } else {
+            res.redirect('/login');
+        }
     }
-}
 
-// Routes
-app.get('/desktop', isAuthenticated, (req, res) => {
-    res.sendFile(path.join(__dirname, '../public/desktop.html'));
-});
+    app.get('/desktop', isAuthenticated, (req, res) => {
+        res.sendFile(path.join(__dirname, '../public/desktop.html'));
+    });
 
-app.get('/login', (req, res) => {
-    res.sendFile(path.join(__dirname, '../public/login.html'));
-});
+    app.get('/login', (req, res) => {
+        res.sendFile(path.join(__dirname, '../public/login.html'));
+    });
 
-app.get('/about', (req, res) => {
-    res.sendFile(path.join(__dirname, '../public/about.html'));
-});
+    app.get('/about', (req, res) => {
+        res.sendFile(path.join(__dirname, '../public/about.html'));
+    });
 
-app.get('/relogin', (req, res) => {
-    res.sendFile(path.join(__dirname, '../public/relogin.html'));
-})
+    app.get('/relogin', (req, res) => {
+        res.sendFile(path.join(__dirname, '../public/relogin.html'));
+    });
 
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../public/index.html'));
-});
+    app.get('/', (req, res) => {
+        res.sendFile(path.join(__dirname, '../public/index.html'));
+    });
 
-// API routes
-app.use('/api/users', userRoutes);
+    app.use('/api/users', userRoutes);
 
-// Start the server
-app.listen(3000, () => console.log('Server running on http://localhost:3000'));
+    app.listen(3000, () => {
+        console.log(chalk.greenBright("┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓"));
+        console.log(chalk.greenBright("┃                                                              ┃"));
+        console.log(chalk.greenBright("┃     🚀 Server is up and running on http://localhost:3000     ┃"));
+        console.log(chalk.greenBright("┃                                                              ┃"));
+        console.log(chalk.greenBright("┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫"));
+        console.log(chalk.greenBright("┃                                                              ┃"));
+        console.log(chalk.greenBright("┃                    👋 Welcome to Sora OS!                    ┃"));
+        console.log(chalk.greenBright("┃  🔌 Powered by Express.js with session handling and routes.  ┃"));
+        console.log(chalk.greenBright("┃ Feel free to contribute at https://github.com/qloha/Sora-OS  ┃"));
+        console.log(chalk.greenBright("┃                                                              ┃"));
+        console.log(chalk.greenBright("┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛"));
+    });
+})();
