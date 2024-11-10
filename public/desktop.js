@@ -76,18 +76,22 @@ async function loadUserPreferences() {
     try {
         const response = await fetch('/api/users/getPreferences');
         if (!response.ok) throw new Error('Failed to load preferences');
+
+        // Fetch background, username, and password from the response
         const { background, username, password } = await response.json();
 
         // Set input fields with fetched or default values
         document.getElementById('username').value = username || 'Guest';
         document.getElementById('password').value = password || '';
         document.getElementById('background').value = background || '/assets/img/background.png';
+
+        // Update start menu username to match the settings username
+        setUserName(username || 'Guest');
     } catch (error) {
         console.error(error);
     }
 }
 
-// Save General Settings
 async function saveGeneralSettings() {
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
@@ -99,6 +103,11 @@ async function saveGeneralSettings() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username, password })
         });
+
+        // Update start menu username immediately after saving
+        setUserName(username);
+
+        // Display success message
         feedback.textContent = 'Saved!';
         feedback.style.color = 'green';
     } catch (error) {
