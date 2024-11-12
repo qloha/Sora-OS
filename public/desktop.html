@@ -14,21 +14,12 @@
   <!-- Settings App -->
   <div id="settingsApp" class="settings-app" style="display: none;">
     <div class="settings-sidebar">
-      <div class="sidebar-item" onclick="showSettingsContent('general')">General</div>
+      <!-- Only show Desktop settings and Close options -->
       <div class="sidebar-item" onclick="showSettingsContent('desktop')">Desktop</div>
       <div class="sidebar-item" onclick="closeSettingsApp()">Close</div>
     </div>
     <div class="settings-content">
-      <div id="general" class="content-section">
-        <h2>General Settings</h2>
-        <label for="username">Username:</label>
-        <input type="text" id="username" placeholder="Enter your name">
-        <label for="password">Password:</label>
-        <input type="password" id="password" placeholder="Enter new password">
-        <button onclick="saveGeneralSettings()">Save</button>
-        <div id="generalFeedback" class="feedback-message"></div> <!-- Feedback message here -->
-      </div>
-      <div id="desktop" class="content-section" style="display: none;">
+      <div id="desktop" class="content-section">
         <h2>Desktop Settings</h2>
         <label for="background">Desktop Background URL:</label>
         <input type="text" id="background" placeholder="Enter image URL">

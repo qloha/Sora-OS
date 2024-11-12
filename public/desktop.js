@@ -1,3 +1,4 @@
+// Update Clock and Date
 async function updateClockAndDate() {
     const now = new Date();
 
@@ -14,11 +15,13 @@ async function updateClockAndDate() {
     document.getElementById('date').textContent = dateString;
 }
 
+// Toggle Start Menu
 async function toggleStartMenu() {
     const startMenu = document.getElementById('startMenu');
     startMenu.style.display = startMenu.style.display === 'none' || !startMenu.style.display ? 'block' : 'none';
 }
 
+// Hide Start Menu when clicking outside
 window.addEventListener('click', function(event) {
     const startMenu = document.getElementById('startMenu');
     const startButton = document.querySelector('.taskbar-start');
@@ -27,7 +30,7 @@ window.addEventListener('click', function(event) {
     }
 });
 
-
+// Define functions for navigation and apps
 async function home() {
     window.location.href = '/';
 }
@@ -53,69 +56,40 @@ async function flappyBird() {
     console.log("flappy bird");
 }
 
+// Open Settings App with Desktop tab as default
 async function openSettingsApp() {
     document.getElementById('settingsApp').style.display = 'flex';
-    showSettingsContent('general'); // Default to General tab
-
-    // Load saved user preferences
+    showSettingsContent('desktop'); // Default to Desktop tab
     await loadUserPreferences();
 }
 
-// Close the Settings App
+// Close Settings App
 function closeSettingsApp() {
     document.getElementById('settingsApp').style.display = 'none';
 }
 
-// Show specific settings content based on tab clicked
+// Show specific settings content (only Desktop now)
 function showSettingsContent(tab) {
     document.querySelectorAll('.content-section').forEach(section => section.style.display = 'none');
     document.getElementById(tab).style.display = 'block';
 }
 
+// Load user preferences for Desktop settings only
 async function loadUserPreferences() {
     try {
+        if (!currentUser) return;
+
         const response = await fetch('/api/users/getPreferences');
         if (!response.ok) throw new Error('Failed to load preferences');
 
-        // Fetch background, username, and password from the response
-        const { background, username, password } = await response.json();
-
-        // Set input fields with fetched or default values
-        document.getElementById('username').value = username || 'Guest';
-        document.getElementById('password').value = password || '';
+        const { background } = await response.json();
         document.getElementById('background').value = background || '/assets/img/background.png';
-
-        // Update start menu username to match the settings username
-        setUserName(username || 'Guest');
     } catch (error) {
         console.error(error);
     }
 }
 
-async function saveGeneralSettings() {
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-    const feedback = document.getElementById('generalFeedback');
-
-    try {
-        await fetch('/api/users/savePreferences', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, password })
-        });
-
-        // Update start menu username immediately after saving
-        setUserName(username);
-
-        // Display success message
-        feedback.textContent = 'Saved!';
-        feedback.style.color = 'green';
-    } catch (error) {
-        feedback.textContent = 'Failed to save.';
-        feedback.style.color = 'red';
-    }
-}
-
+// Apply Desktop settings (e.g., background)
 async function applyDesktopSettings() {
     const background = document.getElementById('background').value;
     const feedback = document.getElementById('desktopFeedback');
@@ -135,7 +109,7 @@ async function applyDesktopSettings() {
     }
 }
 
-// Update the apps array to include the Settings app
+// Update apps array to include Settings app
 const apps = [
     {
         name: 'Browser',
@@ -154,25 +128,28 @@ const apps = [
     },
     {
         name: 'Settings',
-        icon: '/assets/img/settings.png', // Use an appropriate settings icon
+        icon: '/assets/img/settings.png',
         action: () => openSettingsApp()
     }
 ];
 
+// Fetch user name and preferences
 async function fetchUserName() {
     try {
         const response = await fetch('/api/users/current');
         if (!response.ok) throw new Error('Failed to fetch user');
 
         const data = await response.json();
-        setUserName(data.username);
+        currentUser = data.username;
+        setUserName(currentUser);
     } catch (error) {
         console.error(error);
-        setUserName('Guest'); // Fallback if not logged in
+        currentUser = null;
+        setUserName('Guest');
     }
 }
 
-// Function to render desktop and Start Menu
+// Render desktop and Start Menu
 function renderDesktopIcons() {
     const desktopIconsContainer = document.querySelector('.icons');
     desktopIconsContainer.innerHTML = '';
@@ -195,6 +172,7 @@ function renderDesktopIcons() {
     });
 }
 
+// Render Start Menu
 function renderStartMenu() {
     const startMenuContainer = document.querySelector('.start-menu-content');
     startMenuContainer.innerHTML = '';
@@ -256,17 +234,20 @@ function renderStartMenu() {
     startMenuContainer.appendChild(powerOptions);
 }
 
+// Set the user name in the Start Menu
 function setUserName(name) {
     document.getElementById('userName').textContent = name;
 }
 
+let currentUser = null;
 let userPreferences = { background: '/assets/img/background.png', taskbarApps: [] };
+
 async function fetchPreferences() {
     try {
         const response = await fetch('/api/users/getPreferences');
         if (!response.ok) throw new Error('Failed to fetch preferences');
         userPreferences = await response.json();
-        applyPreferences(); // Call applyPreferences after userPreferences is updated
+        applyPreferences();
     } catch (error) {
         console.error(error);
     }
@@ -281,8 +262,7 @@ function applyPreferences() {
     }
 }
 
-window.onload = fetchPreferences;
-
+// Context menu for desktop
 document.addEventListener('contextmenu', (event) => {
     const isDesktop = event.target.classList.contains('desktop') || event.target === document.body;
     if (!isDesktop) return;
@@ -310,10 +290,10 @@ document.addEventListener('contextmenu', (event) => {
     }, { once: true });
 });
 
-// Render taskbar icons based on user preferences
+// Render taskbar icons based on preferences
 function renderTaskbarIcons() {
     const taskbarCenter = document.querySelector('.taskbar-center');
-    taskbarCenter.innerHTML = ''; // Clear existing icons
+    taskbarCenter.innerHTML = '';
 
     userPreferences.taskbarApps.forEach(appName => {
         const app = apps.find(app => app.name === appName);
