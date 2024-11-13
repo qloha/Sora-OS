@@ -9,25 +9,9 @@
 </head>
 <body>
 <div class="desktop">
-  <div class="icons"></div> <!-- Desktop icons will be rendered here -->
+  <div class="icons"></div>
 
-  <!-- Settings App -->
-  <div id="settingsApp" class="settings-app" style="display: none;">
-    <div class="settings-sidebar">
-      <!-- Only show Desktop settings and Close options -->
-      <div class="sidebar-item" onclick="showSettingsContent('desktop')">Desktop</div>
-      <div class="sidebar-item" onclick="closeSettingsApp()">Close</div>
-    </div>
-    <div class="settings-content">
-      <div id="desktop" class="content-section">
-        <h2>Desktop Settings</h2>
-        <label for="background">Desktop Background URL:</label>
-        <input type="text" id="background" placeholder="Enter image URL">
-        <button onclick="applyDesktopSettings()">Apply</button>
-        <div id="desktopFeedback" class="feedback-message"></div> <!-- Feedback message here -->
-      </div>
-    </div>
-  </div>
+  <iframe id="settingsAppIframe" src="/apps/settings/settingsApp.html" style="display: none; width: 600px; height: 400px; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1001; border-radius: 10px; box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3);" allowfullscreen></iframe>
 
   <div class="taskbar">
     <div class="taskbar-start" onclick="toggleStartMenu()">

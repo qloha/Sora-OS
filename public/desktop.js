@@ -15,10 +15,9 @@ async function updateClockAndDate() {
     document.getElementById('date').textContent = dateString;
 }
 
-// Toggle Start Menu
-async function toggleStartMenu() {
+function toggleStartMenu() {
     const startMenu = document.getElementById('startMenu');
-    startMenu.style.display = startMenu.style.display === 'none' || !startMenu.style.display ? 'block' : 'none';
+    startMenu.style.display = (startMenu.style.display === 'none' || !startMenu.style.display) ? 'block' : 'none';
 }
 
 // Hide Start Menu when clicking outside
@@ -52,64 +51,22 @@ async function fileExplorer() {
     console.log("file explorer");
 }
 
-async function flappyBird() {
-    console.log("flappy bird");
+async function openFlappyBird() {
+    console.log("flappybird coming soon i promise");
 }
 
-// Open Settings App with Desktop tab as default
 async function openSettingsApp() {
-    document.getElementById('settingsApp').style.display = 'flex';
-    showSettingsContent('desktop'); // Default to Desktop tab
-    await loadUserPreferences();
+    const settingsIframe = document.getElementById('settingsAppIframe');
+    settingsIframe.style.display = 'block';
+    settingsIframe.contentWindow.showSettingsContent('general');
 }
 
-// Close Settings App
-function closeSettingsApp() {
-    document.getElementById('settingsApp').style.display = 'none';
+async function closeSettingsApp() {
+    const settingsIframe = document.getElementById('settingsAppIframe');
+    settingsIframe.style.display = 'none';
 }
 
-// Show specific settings content (only Desktop now)
-function showSettingsContent(tab) {
-    document.querySelectorAll('.content-section').forEach(section => section.style.display = 'none');
-    document.getElementById(tab).style.display = 'block';
-}
 
-// Load user preferences for Desktop settings only
-async function loadUserPreferences() {
-    try {
-        if (!currentUser) return;
-
-        const response = await fetch('/api/users/getPreferences');
-        if (!response.ok) throw new Error('Failed to load preferences');
-
-        const { background } = await response.json();
-        document.getElementById('background').value = background || '/assets/img/background.png';
-    } catch (error) {
-        console.error(error);
-    }
-}
-
-// Apply Desktop settings (e.g., background)
-async function applyDesktopSettings() {
-    const background = document.getElementById('background').value;
-    const feedback = document.getElementById('desktopFeedback');
-
-    try {
-        await fetch('/api/users/savePreferences', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ background })
-        });
-        document.body.style.backgroundImage = `url(${background})`;
-        feedback.textContent = 'Applied!';
-        feedback.style.color = 'green';
-    } catch (error) {
-        feedback.textContent = 'Failed to apply.';
-        feedback.style.color = 'red';
-    }
-}
-
-// Update apps array to include Settings app
 const apps = [
     {
         name: 'Browser',
@@ -124,7 +81,7 @@ const apps = [
     {
         name: 'Flappy Bird',
         icon: '/assets/img/flappy-bird.png',
-        action: () => flappyBird()
+        action: () => openFlappyBird() // Ensure this is pointing to openFlappyBird function
     },
     {
         name: 'Settings',
@@ -172,7 +129,6 @@ function renderDesktopIcons() {
     });
 }
 
-// Render Start Menu
 function renderStartMenu() {
     const startMenuContainer = document.querySelector('.start-menu-content');
     startMenuContainer.innerHTML = '';
@@ -288,7 +244,7 @@ document.addEventListener('contextmenu', (event) => {
     window.addEventListener('click', () => {
         if (document.body.contains(menu)) document.body.removeChild(menu);
     }, { once: true });
-});
+})
 
 // Render taskbar icons based on preferences
 function renderTaskbarIcons() {
