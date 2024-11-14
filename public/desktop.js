@@ -51,46 +51,94 @@ async function fileExplorer() {
     console.log("file explorer");
 }*/
 
+function setIframeSrc(iframeId, src) {
+    const iframe = document.getElementById(iframeId);
+    if (iframe.src !== src) iframe.src = src;
+}
+
+// Utility function to clear iframe source
+function clearIframeSrc(iframeId) {
+    const iframe = document.getElementById(iframeId);
+    iframe.src = '';
+}
+
+// Function to create and append an iframe dynamically
+function createIframe(iframeId, src, width, height) {
+    // Check if iframe already exists
+    let iframe = document.getElementById(iframeId);
+    if (!iframe) {
+        iframe = document.createElement('iframe');
+        iframe.id = iframeId;
+        iframe.style.display = 'none';
+        iframe.style.width = `${width}px`;
+        iframe.style.height = `${height}px`;
+        iframe.style.position = 'fixed';
+        iframe.style.top = '50%';
+        iframe.style.left = '50%';
+        iframe.style.transform = 'translate(-50%, -50%)';
+        iframe.style.zIndex = '1001';
+        iframe.style.borderRadius = '10px';
+        iframe.style.boxShadow = '0px 4px 12px rgba(0, 0, 0, 0.3)';
+        iframe.allowFullscreen = true;
+
+        document.body.appendChild(iframe);
+    }
+    iframe.src = src;
+    return iframe;
+}
+
+// Function to remove an iframe
+function removeIframe(iframeId) {
+    const iframe = document.getElementById(iframeId);
+    if (iframe) {
+        iframe.parentElement.removeChild(iframe);
+    }
+}
+
+// Open and close app functions using dynamic iframe creation
+async function openApp(iframeId, src, width, height) {
+    const iframe = createIframe(iframeId, src, width, height);
+    iframe.style.display = 'block';
+}
+
+async function closeApp(iframeId) {
+    removeIframe(iframeId);
+}
+
+// Specific app handlers
 async function openSlopeApp() {
-    const slopeIframe = document.getElementById('slopeAppIframe');
-    slopeIframe.style.display = 'block';
+    await openApp('slopeAppIframe', '/apps/slopeApp.html', 955, 640);
 }
 
 async function closeSlopeApp() {
-    const slopeIframe = document.getElementById('slopeAppIframe');
-    slopeIframe.style.display = 'none';
+    await closeApp('slopeAppIframe');
 }
 
 async function openSnakeApp() {
-    const snakeIframe = document.getElementById('snakeAppIframe');
-    snakeIframe.style.display = 'block';
+    await openApp('snakeAppIframe', '/apps/snakeApp.html', 420, 420);
 }
 
 async function closeSnakeApp() {
-    const snakeIframe = document.getElementById('snakeAppIframe');
-    snakeIframe.style.display = 'none';
+    await closeApp('snakeAppIframe');
 }
 
 async function openPongApp() {
-    const pongIframe = document.getElementById('pongAppIframe');
-    pongIframe.style.display = 'block';
+    await openApp('pongAppIframe', '/apps/pongApp.html', 760, 595);
 }
 
 async function closePongApp() {
-    const pongIframe = document.getElementById('pongAppIframe');
-    pongIframe.style.display = 'none';
+    await closeApp('pongAppIframe');
 }
 
 async function openSettingsApp() {
-    const settingsIframe = document.getElementById('settingsAppIframe');
-    settingsIframe.style.display = 'block';
-    settingsIframe.contentWindow.showSettingsContent('general');
+    await openApp('settingsAppIframe', '/apps/settingsApp.html', 600, 400);
 }
 
 async function closeSettingsApp() {
-    const settingsIframe = document.getElementById('settingsAppIframe');
-    settingsIframe.style.display = 'none';
+    await closeApp('settingsAppIframe');
 }
+
+
 
 
 const apps = [
