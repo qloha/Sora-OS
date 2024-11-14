@@ -1,47 +1,72 @@
-# Sora OS
+# 🌌 **Sora OS**
 
-The gateway to the most advanced operating system in the cloud.
-## About Sora OS
-Learn more about the features and vision of Sora OS.
-### Our vision
-Sora OS is a fast and modern operating system in the cloud. Our vision is to create a world where you can have a fully functional computer in a website.
-### Key Features
-- Fast & Responsive: Smooth and quick interface for all types of users.
-- User-Friendly: Designed to be intuitive and easy to navigate.
-- Customizable: Tailor your experience to your needs with a variety of options.
-## Authors
+**Your gateway to the most advanced operating system in the cloud.**
 
-- [@qloha](https://www.github.com/qloha)
+---  
 
+## 🌟 **About Sora OS**
 
-## Appendix
+Explore the vision and features of **Sora OS**, where the power of the cloud meets cutting-edge technology.
 
-This is a work in progress operating system. All features are subject to change.
+### 🎯 **Our Vision**
+Sora OS is a fast and modern cloud-based operating system. Our mission is to create a world where everyone can have a fully functional computer accessible through a website.
 
-## 🔗 Links
-[![portfolio](https://img.shields.io/badge/my_portfolio-000?style=for-the-badge&logo=ko-fi&logoColor=white)](https://qloha.github.io/about/)
-## Run Locally
+---
 
-Clone the project
+## 🚀 **Key Features**
 
-```bash
-  git clone https://github.com/qloha/Sora-OS
+✨ **Speed & Performance**
+- ⚡ **Fast & Responsive**: Experience smooth interactions, built for all types of users.
+
+🎨 **Design**
+- 🖥️ **User-Friendly Interface**: A seamless and intuitive experience for beginners and experts alike.
+
+🛠️ **Personalization**
+- 🎛️ **Customizable**: Tailor the OS to fit your unique needs.
+
+---
+
+## 👤 **Authors**
+
+| ![qloha](https://avatars.githubusercontent.com/u/172928329?v=4&s=100) |  
+|:---------------------------------------------------------------------:|  
+|               **[qloha](https://www.github.com/qloha)**               |  
+
+---
+
+## 📋 **Appendix**
+
+> **Note:**  
+> Sora OS is a **work in progress**. Features, designs, and functionality are subject to change.
+
+---
+
+## 🔗 **Links**
+
+Stay connected and explore more:
+
+[![Portfolio](https://img.shields.io/badge/portfolio-0A0A0A?style=for-the-badge&logo=ko-fi&logoColor=white)](https://qloha.github.io/about/)  
+[![GitHub](https://img.shields.io/badge/GitHub-000000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/qloha/Sora-OS)
+
+---
+
+## 🛠️ **Run Locally**
+
+Follow these steps to set up the project locally:
+
+### Clone the Repository
+```bash  
+git clone https://github.com/qloha/Sora-OS  
 ```
-
-Go to the project directory
-
+### Navigate to the Project Directory
 ```bash
-  cd Sora-OS
+cd Sora-OS  
 ```
-
-Install dependencies
-
+### Install Dependencies
 ```bash
-  npm install
+npm install  
 ```
-
-Start the server
-
+### Start the Server
 ```bash
-  node backend/app.js
+npm run start
 ```
