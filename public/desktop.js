@@ -51,6 +51,16 @@ async function fileExplorer() {
     console.log("file explorer");
 }*/
 
+async function openSlopeApp() {
+    const slopeIframe = document.getElementById('slopeAppIframe');
+    slopeIframe.style.display = 'block';
+}
+
+async function closeSlopeApp() {
+    const slopeIframe = document.getElementById('slopeAppIframe');
+    slopeIframe.style.display = 'none';
+}
+
 async function openSnakeApp() {
     const snakeIframe = document.getElementById('snakeAppIframe');
     snakeIframe.style.display = 'block';
@@ -110,6 +120,11 @@ const apps = [
         name: 'Snake',
         icon: '/assets/img/snake.png',
         action: () => openSnakeApp()
+    },
+    {
+        name: 'Slope 3',
+        icon: '/assets/img/slope.png',
+        action: () => openSlopeApp()
     }
 ];
 
