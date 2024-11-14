@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings App</title>
+</head>
+<style>
+    body, html {
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: Arial, sans-serif;
+    }
+
+    .settings-app {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        width: 600px;
+        height: 450px;
+        background: linear-gradient(145deg, #ffffff, #f9f9f9);
+        transform: translate(-50%, -50%);
+        border-radius: 15px;
+        display: flex;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+        z-index: 1001;
+        overflow: hidden;
+        border: 1px solid #e0e0e0;
+    }
+
+    /* Sidebar */
+    .settings-sidebar {
+        width: 160px;
+        background: #f3f3f3;
+        display: flex;
+        flex-direction: column;
+        border-right: 1px solid #ddd;
+        padding: 50px 0; /* Extra padding for better alignment */
+    }
+
+    .sidebar-item {
+        padding: 12px 10px;
+        margin: 8px;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        color: #333;
+        text-align: center;
+        border-radius: 8px;
+        transition: background 0.3s, transform 0.2s;
+    }
+
+    .sidebar-item:hover {
+        background-color: #e0e0e0;
+        transform: scale(1.05);
+        color: #000;
+    }
+
+    /* Settings Content Area */
+    .settings-content {
+        flex: 1;
+        padding: 25px;
+        background: #fff;
+        overflow-y: auto;
+        font-family: 'Arial', sans-serif;
+        color: #555;
+    }
+
+    .settings-content h2 {
+        font-size: 22px;
+        font-weight: bold;
+        margin-bottom: 15px;
+        color: #333;
+        text-align: center; /* Center the title */
+    }
+
+    /* Input Fields */
+    .settings-content input[type="text"] {
+        width: 100%;
+        padding: 10px;
+        margin: 15px 0;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 14px;
+        transition: border 0.3s, box-shadow 0.3s;
+    }
+
+    .settings-content input[type="text"]:focus {
+        border-color: #0078d4;
+        box-shadow: 0 0 5px rgba(0, 120, 212, 0.5);
+        outline: none;
+    }
+
+    /* Apply Button */
+    .settings-content button {
+        padding: 10px 20px;
+        font-size: 14px;
+        color: #fff;
+        background: #0078d4;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background 0.3s ease, transform 0.2s ease;
+    }
+
+    .settings-content button:hover {
+        background: #005a9e;
+        transform: scale(1.05);
+    }
+
+    /* Close Button (Top Center) */
+    .settings-app::before {
+        content: '×';
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 20px;
+        font-weight: bold;
+        color: #555;
+        cursor: pointer;
+        transition: color 0.3s ease, transform 0.2s ease;
+    }
+
+    .settings-app::before:hover {
+        color: #000;
+        transform: scale(1.1);
+    }
+
+    /* Background Overlay */
+    .settings-app-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.4); /* Dark transparent overlay */
+        z-index: 1000;
+    }
+
+    .close-btn {
+        position: absolute;
+        top: 35px;
+        right: 15px;
+        width: 30px;
+        height: 30px;
+        background: #f3f3f3;
+        color: #333;
+        font-size: 20px;
+        font-weight: bold;
+        text-align: center;
+        line-height: 30px;
+        border-radius: 50%;
+        cursor: pointer;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        transition: background 0.3s ease, transform 0.2s ease;
+    }
+
+    .close-btn:hover {
+        background: #e0e0e0;
+        transform: scale(1.1);
+    }
+</style>
+<body>
+<div class="settings-app">
+    <div class="close-btn" onclick="closeApp()">×</div>
+    <div class="settings-sidebar">
+        <div class="sidebar-item" onclick="showSettingsContent('general')">General</div>
+        <div class="sidebar-item" onclick="showSettingsContent('desktop')">Desktop</div>
+        <div class="sidebar-item" onclick="showSettingsContent('apps')">Apps</div>
+    </div>
+    <div class="settings-content">
+        <div id="general" class="content-section" style="display: block;">
+            <h2>General</h2>
+        </div>
+        <div id="desktop" class="content-section" style="display: none;">
+            <h2>Desktop Settings</h2>
+            <label for="background">Desktop Background</label>
+            <input type="text" id="background" placeholder="Enter image URL">
+            <button onclick="applyDesktopSettings()">Apply</button>
+            <div id="desktopFeedback" class="feedback-message"></div>
+        </div>
+        <div id="apps" class="content-section" style="display: none;">
+            <h2>Apps</h2>
+            <p1>Placeholder for managing apps</p1>
+        </div>
+    </div>
+</div>
+<script>
+    async function loadUserPreferences() {
+        try {
+            const response = await fetch('/api/users/getPreferences');
+            if (!response.ok) throw new Error('Failed to load preferences');
+
+            const { background } = await response.json();
+            document.getElementById('background').value = background || '/assets/img/background.png';
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async function applyDesktopSettings() {
+        const background = document.getElementById('background').value;
+        const feedback = document.getElementById('desktopFeedback');
+
+        try {
+            await fetch('/api/users/savePreferences', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ background })
+            });
+            parent.document.body.style.backgroundImage = `url(${background})`; // Set background on parent
+            feedback.textContent = 'Applied!';
+            feedback.style.color = 'green';
+        } catch (error) {
+            feedback.textContent = 'Failed to apply.';
+            feedback.style.color = 'red';
+        }
+    }
+
+    // Show specific settings content (only Desktop now)
+    function showSettingsContent(tab) {
+        document.querySelectorAll('.content-section').forEach(section => section.style.display = 'none');
+        document.getElementById(tab).style.display = 'block';
+    }
+
+    function closeApp() {
+        window.parent.closeSettingsApp();
+    }
+
+    document.addEventListener('DOMContentLoaded', loadUserPreferences);
+</script>
+</body>
+</html>

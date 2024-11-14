@@ -1,4 +1,3 @@
-// Update Clock and Date
 async function updateClockAndDate() {
     const now = new Date();
 
@@ -43,16 +42,33 @@ async function logout() {
     window.location.href = '/login';
 }
 
+/*
 async function browser() {
     console.log("browser");
 }
 
 async function fileExplorer() {
     console.log("file explorer");
+}*/
+
+async function openSnakeApp() {
+    const snakeIframe = document.getElementById('snakeAppIframe');
+    snakeIframe.style.display = 'block';
 }
 
-async function openFlappyBird() {
-    console.log("flappybird coming soon i promise");
+async function closeSnakeApp() {
+    const snakeIframe = document.getElementById('snakeAppIframe');
+    snakeIframe.style.display = 'none';
+}
+
+async function openPongApp() {
+    const pongIframe = document.getElementById('pongAppIframe');
+    pongIframe.style.display = 'block';
+}
+
+async function closePongApp() {
+    const pongIframe = document.getElementById('pongAppIframe');
+    pongIframe.style.display = 'none';
 }
 
 async function openSettingsApp() {
@@ -68,6 +84,7 @@ async function closeSettingsApp() {
 
 
 const apps = [
+    /*
     {
         name: 'Browser',
         icon: '/assets/img/browser.png',
@@ -78,15 +95,21 @@ const apps = [
         icon: '/assets/img/file-explorer.png',
         action: () => fileExplorer()
     },
-    {
-        name: 'Flappy Bird',
-        icon: '/assets/img/flappy-bird.png',
-        action: () => openFlappyBird() // Ensure this is pointing to openFlappyBird function
-    },
+    */
     {
         name: 'Settings',
         icon: '/assets/img/settings.png',
         action: () => openSettingsApp()
+    },
+    {
+        name: 'Pong',
+        icon: '/assets/img/pong.png',
+        action: () => openPongApp()
+    },
+    {
+        name: 'Snake',
+        icon: '/assets/img/snake.png',
+        action: () => openSnakeApp()
     }
 ];
 
