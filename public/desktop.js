@@ -50,21 +50,7 @@ async function browser() {
 async function fileExplorer() {
     console.log("file explorer");
 }*/
-
-function setIframeSrc(iframeId, src) {
-    const iframe = document.getElementById(iframeId);
-    if (iframe.src !== src) iframe.src = src;
-}
-
-// Utility function to clear iframe source
-function clearIframeSrc(iframeId) {
-    const iframe = document.getElementById(iframeId);
-    iframe.src = '';
-}
-
-// Function to create and append an iframe dynamically
 function createIframe(iframeId, src, width, height) {
-    // Check if iframe already exists
     let iframe = document.getElementById(iframeId);
     if (!iframe) {
         iframe = document.createElement('iframe');
@@ -103,15 +89,6 @@ async function openApp(iframeId, src, width, height) {
 
 async function closeApp(iframeId) {
     removeIframe(iframeId);
-}
-
-// Specific app handlers
-async function openSlopeApp() {
-    await openApp('slopeAppIframe', '/apps/slopeApp.html', 955, 640);
-}
-
-async function closeSlopeApp() {
-    await closeApp('slopeAppIframe');
 }
 
 async function openSnakeApp() {
@@ -169,14 +146,8 @@ const apps = [
         icon: '/assets/img/snake.png',
         action: () => openSnakeApp()
     },
-    {
-        name: 'Slope 3',
-        icon: '/assets/img/slope.png',
-        action: () => openSlopeApp()
-    }
 ];
 
-// Fetch user name and preferences
 async function fetchUserName() {
     try {
         const response = await fetch('/api/users/current');
@@ -192,34 +163,18 @@ async function fetchUserName() {
     }
 }
 
-// Render desktop and Start Menu
-function renderDesktopIcons() {
-    const desktopIconsContainer = document.querySelector('.icons');
-    desktopIconsContainer.innerHTML = '';
-
-    apps.forEach(app => {
-        const iconElement = document.createElement('div');
-        iconElement.classList.add('icon');
-        iconElement.onclick = app.action;
-
-        const imgElement = document.createElement('img');
-        imgElement.src = app.icon;
-        imgElement.alt = `${app.name} Icon`;
-
-        const spanElement = document.createElement('span');
-        spanElement.textContent = app.name;
-
-        iconElement.appendChild(imgElement);
-        iconElement.appendChild(spanElement);
-        desktopIconsContainer.appendChild(iconElement);
-    });
-}
+let currentPage = 0;
+const appsPerPage = 6;
 
 function renderStartMenu() {
     const startMenuContainer = document.querySelector('.start-menu-content');
     startMenuContainer.innerHTML = '';
 
-    apps.forEach(app => {
+    const start = currentPage * appsPerPage;
+    const end = start + appsPerPage;
+    const currentApps = apps.slice(start, end);
+
+    currentApps.forEach(app => {
         const menuItem = document.createElement('div');
         menuItem.classList.add('start-menu-item');
         menuItem.onclick = app.action;
@@ -236,6 +191,32 @@ function renderStartMenu() {
         startMenuContainer.appendChild(menuItem);
     });
 
+    const navigationContainer = document.createElement('div');
+    navigationContainer.classList.add('navigation-container');
+
+    if (currentPage > 0) {
+        const prevButton = document.createElement('button');
+        prevButton.textContent = 'Previous';
+        prevButton.onclick = () => {
+            currentPage--;
+            renderStartMenu();
+        };
+        navigationContainer.appendChild(prevButton);
+    }
+
+    if (end < apps.length) {
+        const nextButton = document.createElement('button');
+        nextButton.textContent = 'Next';
+        nextButton.onclick = () => {
+            currentPage++;
+            renderStartMenu();
+        };
+        navigationContainer.appendChild(nextButton);
+    }
+
+    startMenuContainer.appendChild(navigationContainer);
+
+    // Add user info and power options
     const divider = document.createElement('hr');
     startMenuContainer.appendChild(divider);
 
@@ -276,7 +257,17 @@ function renderStartMenu() {
     startMenuContainer.appendChild(powerOptions);
 }
 
-// Set the user name in the Start Menu
+function renderDesktopIcons() {
+    const desktopIconsContainer = document.querySelector('.icons');
+    desktopIconsContainer.innerHTML = '';
+}
+
+function renderTaskbarIcons() {
+    const taskbarCenter = document.querySelector('.taskbar-center');
+    taskbarCenter.innerHTML = '';
+}
+
+
 function setUserName(name) {
     document.getElementById('userName').textContent = name;
 }
@@ -320,7 +311,7 @@ document.addEventListener('contextmenu', (event) => {
     settingsOption.classList.add('context-menu-item');
     settingsOption.textContent = 'Settings';
     settingsOption.onclick = () => {
-        openSettingsApp();
+        openSettingsApp().catch(console.error);
         document.body.removeChild(menu);
     };
 
@@ -332,30 +323,13 @@ document.addEventListener('contextmenu', (event) => {
     }, { once: true });
 })
 
-// Render taskbar icons based on preferences
-function renderTaskbarIcons() {
-    const taskbarCenter = document.querySelector('.taskbar-center');
-    taskbarCenter.innerHTML = '';
-
-    userPreferences.taskbarApps.forEach(appName => {
-        const app = apps.find(app => app.name === appName);
-        if (!app) return;
-
-        const img = document.createElement('img');
-        img.src = app.icon;
-        img.alt = `${app.name} Icon`;
-        img.classList.add('taskbar-app');
-        img.onclick = app.action;
-        taskbarCenter.appendChild(img);
-    });
-}
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
-    fetchPreferences();
+    fetchPreferences().catch(console.error);
     renderDesktopIcons();
     renderStartMenu();
-    fetchUserName();
-    updateClockAndDate();
+    fetchUserName().catch(console.error);
+    updateClockAndDate().catch(console.error);
     setInterval(updateClockAndDate, 1000);
 });

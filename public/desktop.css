@@ -85,7 +85,7 @@ body, html {
     border-radius: 10px;
     padding: 10px;
     display: none;
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
 .start-menu-content {
@@ -216,4 +216,23 @@ body, html {
 .feedback-message {
     font-size: 14px;
     margin-top: 8px;
+}
+
+.navigation-container {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+}
+
+.navigation-container button {
+    background-color: rgba(255, 255, 255, 0.2);
+    border: none;
+    border-radius: 5px;
+    color: white;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.navigation-container button:hover {
+    background-color: rgba(255, 255, 255, 0.4);
 }
