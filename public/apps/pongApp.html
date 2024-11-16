@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Basic Pong HTML Game</title>
+  <title>Enhanced Pong Game</title>
   <meta charset="UTF-8">
   <style>
     html, body {
       height: 100%;
       margin: 0;
+      font-family: Arial, sans-serif;
     }
 
     body {
@@ -14,6 +15,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      color: white;
     }
 
     .close-btn {
@@ -35,23 +37,104 @@
     }
 
     .close-btn:hover {
+      z-index: 1001;
+      pointer-events: all !important;
       background: #e0e0e0;
       transform: scale(1.1);
+    }
+
+    #main-menu, #mode-menu, #game-container {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    #main-menu, #mode-menu {
+      display: flex;
+    }
+
+    .menu-item, #back-btn {
+      background: #444;
+      padding: 10px 20px;
+      margin: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+
+    .menu-item:hover, #back-btn:hover {
+      background: #666;
+      transform: scale(1.05);
+    }
+
+    #game-container {
+      pointer-events: none;
+      position: relative;
+      z-index: 1;
+    }
+
+    canvas {
+      pointer-events: none;
+      border: 1px solid #fff;
+    }
+
+    #scoreboard {
+      pointer-events: none;
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      justify-content: space-between;
+      width: 200px;
+      font-size: 24px;
+    }
+
+    #scoreboard div {
+      pointer-events: none;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
 <div class="close-btn" onclick="closeApp()">×</div>
-<canvas width="750" height="585" id="game"></canvas>
+
+<div id="main-menu">
+  <h1>Pong Game</h1>
+  <div class="menu-item" onclick="showModeMenu()">Start Game</div>
+  <div class="menu-item" onclick="closeApp()">Quit</div>
+</div>
+
+<div id="mode-menu">
+  <h1>Select Game Mode</h1>
+  <div class="menu-item" onclick="startGame('single')">Single Player</div>
+  <div class="menu-item" onclick="startGame('two')">Two Player</div>
+  <div id="back-btn" onclick="showMainMenu()">Back</div>
+</div>
+
+<div id="game-container">
+  <div id="scoreboard">
+    <div id="left-score">0</div>
+    <div id="right-score">0</div>
+  </div>
+  <canvas width="750" height="585" id="game"></canvas>
+</div>
+
 <script>
   const canvas = document.getElementById('game');
   const context = canvas.getContext('2d');
   const grid = 15;
-  const paddleHeight = grid * 5; // 80
+  const paddleHeight = grid * 5;
   const maxPaddleY = canvas.height - grid - paddleHeight;
+  const winScore = 11;
 
-  var paddleSpeed = 6;
-  var ballSpeed = 5;
+  let paddleSpeed = 6;
+  let ballSpeed = 5;
+  let gameRunning = false;
+  let gameMode = 'two'; // 'single' or 'two'
+  let leftScore = 0;
+  let rightScore = 0;
 
   const leftPaddle = {
     x: grid * 2,
@@ -60,6 +143,7 @@
     height: paddleHeight,
     dy: 0
   };
+
   const rightPaddle = {
     x: canvas.width - grid * 3,
     y: canvas.height / 2 - paddleHeight / 2,
@@ -67,6 +151,7 @@
     height: paddleHeight,
     dy: 0
   };
+
   const ball = {
     x: canvas.width / 2,
     y: canvas.height / 2,
@@ -84,9 +169,121 @@
             obj1.y + obj1.height > obj2.y;
   }
 
+  function resetGame() {
+    leftScore = 0;
+    rightScore = 0;
+    updateScoreboard();
+    resetBall();
+  }
+
+  function resetBall() {
+    ball.x = canvas.width / 2;
+    ball.y = canvas.height / 2;
+    ball.dx = ballSpeed * (Math.random() > 0.5 ? 1 : -1);
+    ball.dy = ballSpeed * (Math.random() > 0.5 ? 1 : -1);
+  }
+
+  function updateScoreboard() {
+    document.getElementById('left-score').textContent = leftScore;
+    document.getElementById('right-score').textContent = rightScore;
+  }
+
+  function confettiAnimation() {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.id = 'confetti-canvas';
+    canvas.style.position = 'absolute';
+    canvas.style.top = '0';
+    canvas.style.left = '0';
+    canvas.width = document.body.clientWidth;
+    canvas.height = document.body.clientHeight;
+    document.body.appendChild(canvas);
+
+    const confetti = [];
+    const confettiCount = 200;
+
+    for (let i = 0; i < confettiCount; i++) {
+      confetti.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height - canvas.height,
+        color: `hsl(${Math.random() * 360}, 100%, 50%)`,
+        size: Math.random() * 8 + 4,
+        speed: Math.random() * 4 + 2,
+        oscillation: Math.random() * 2
+      });
+    }
+
+    function drawConfetti() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      for (const particle of confetti) {
+        ctx.beginPath();
+        ctx.arc(
+                particle.x + Math.sin(particle.oscillation * Date.now() * 0.001) * 20,
+                particle.y,
+                particle.size,
+                0,
+                Math.PI * 2
+        );
+        ctx.fillStyle = particle.color;
+        ctx.fill();
+
+        particle.y += particle.speed;
+
+        if (particle.y > canvas.height) {
+          particle.y = -10;
+          particle.x = Math.random() * canvas.width;
+        }
+      }
+
+      requestAnimationFrame(drawConfetti);
+    }
+
+    drawConfetti();
+
+    setTimeout(() => {
+      document.body.removeChild(canvas);
+    }, 3000);
+  }
+
+  function showWinningMessage(winner) {
+    const messageDiv = document.createElement('div');
+    messageDiv.id = 'winning-message';
+    messageDiv.style.position = 'absolute';
+    messageDiv.style.top = '50%';
+    messageDiv.style.left = '50%';
+    messageDiv.style.transform = 'translate(-50%, -50%)';
+    messageDiv.style.fontSize = '48px';
+    messageDiv.style.color = 'white';
+    messageDiv.style.textAlign = 'center';
+    messageDiv.style.zIndex = '1000';
+    messageDiv.style.fontWeight = 'bold';
+    messageDiv.textContent = `${winner} Wins!`;
+    document.body.appendChild(messageDiv);
+
+    setTimeout(() => {
+      document.body.removeChild(messageDiv);
+    }, 3000);
+  }
+
+  function checkWin() {
+    if (Math.abs(leftScore - rightScore) >= 2) {
+      if (leftScore >= winScore || rightScore >= winScore) {
+        const winner = leftScore > rightScore ? 'Left Player' : 'Right Player';
+        gameRunning = false;
+
+        showWinningMessage(winner);
+        confettiAnimation();
+
+        setTimeout(showMainMenu, 3000);
+      }
+    }
+  }
+
   function loop() {
+    if (!gameRunning) return;
     requestAnimationFrame(loop);
-    context.clearRect(0,0,canvas.width,canvas.height);
+    context.clearRect(0, 0, canvas.width, canvas.height);
 
     leftPaddle.y += leftPaddle.dy;
     rightPaddle.y += rightPaddle.dy;
@@ -101,6 +298,14 @@
       rightPaddle.y = grid;
     } else if (rightPaddle.y > maxPaddleY) {
       rightPaddle.y = maxPaddleY;
+    }
+
+    if (gameMode === 'single') {
+      if (ball.dy > 0) {
+        leftPaddle.y += paddleSpeed * 0.75;
+      } else {
+        leftPaddle.y -= paddleSpeed * 0.75;
+      }
     }
 
     context.fillStyle = 'white';
@@ -120,10 +325,13 @@
 
     if ((ball.x < 0 || ball.x > canvas.width) && !ball.resetting) {
       ball.resetting = true;
+      if (ball.x < 0) rightScore++;
+      if (ball.x > canvas.width) leftScore++;
+      updateScoreboard();
+      checkWin();
       setTimeout(() => {
         ball.resetting = false;
-        ball.x = canvas.width / 2;
-        ball.y = canvas.height / 2;
+        resetBall();
       }, 400);
     }
 
@@ -138,12 +346,33 @@
     context.fillRect(ball.x, ball.y, ball.width, ball.height);
 
     context.fillStyle = 'lightgrey';
-    context.fillRect(0, 0, canvas.width, grid);
-    context.fillRect(0, canvas.height - grid, canvas.width, canvas.height);
 
     for (let i = grid; i < canvas.height - grid; i += grid * 2) {
       context.fillRect(canvas.width / 2 - grid / 2, i, grid, grid);
     }
+  }
+
+  function showMainMenu() {
+    document.getElementById('main-menu').style.display = 'flex';
+    document.getElementById('mode-menu').style.display = 'none';
+    document.getElementById('game-container').style.display = 'none';
+    gameRunning = false;
+    resetGame();
+  }
+
+  function showModeMenu() {
+    document.getElementById('main-menu').style.display = 'none';
+    document.getElementById('mode-menu').style.display = 'flex';
+  }
+
+  function startGame(mode) {
+    gameMode = mode;
+    document.getElementById('main-menu').style.display = 'none';
+    document.getElementById('mode-menu').style.display = 'none';
+    document.getElementById('game-container').style.display = 'flex';
+    gameRunning = true;
+    resetGame();
+    loop();
   }
 
   document.addEventListener('keydown', function(e) {
@@ -152,10 +381,12 @@
     } else if (e.which === 40) {
       rightPaddle.dy = paddleSpeed;
     }
-    if (e.which === 87) {
-      leftPaddle.dy = -paddleSpeed;
-    } else if (e.which === 83) {
-      leftPaddle.dy = paddleSpeed;
+    if (gameMode === 'two') {
+      if (e.which === 87) {
+        leftPaddle.dy = -paddleSpeed;
+      } else if (e.which === 83) {
+        leftPaddle.dy = paddleSpeed;
+      }
     }
   });
 
@@ -163,16 +394,21 @@
     if (e.which === 38 || e.which === 40) {
       rightPaddle.dy = 0;
     }
-    if (e.which === 83 || e.which === 87) {
+    if (gameMode === 'two' && (e.which === 87 || e.which === 83)) {
       leftPaddle.dy = 0;
     }
   });
 
-  requestAnimationFrame(loop);
-
   function closeApp() {
     window.parent.closePongApp();
   }
+
+  document.querySelector('.close-btn').addEventListener('mouseover', () => {
+    console.log('Mouse is over the close button.');
+  });
+
+  // Initialize to show main menu
+  showMainMenu();
 </script>
 </body>
 </html>

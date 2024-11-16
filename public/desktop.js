@@ -100,7 +100,7 @@ async function closeSnakeApp() {
 }
 
 async function openPongApp() {
-    await openApp('pongAppIframe', '/apps/pongApp.html', 760, 595);
+    await openApp('pongAppIframe', '/apps/pongApp.html', 760, 600);
 }
 
 async function closePongApp() {
