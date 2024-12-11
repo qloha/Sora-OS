@@ -36,7 +36,7 @@ async function lock() {
 }
 
 async function logout() {
-    await fetch('${window.location.origin}/api/users/logout', { method: 'POST' });
+    await fetch(`${window.location.origin}/api/users/logout`, { method: 'POST' });
     window.location.href = '/login';
 }
 
@@ -103,9 +103,6 @@ async function closeSettingsApp() {
     await closeApp('settingsAppIframe');
 }
 
-
-
-
 const apps = [
     {
         name: 'Settings',
@@ -126,7 +123,7 @@ const apps = [
 
 async function fetchUserName() {
     try {
-        const response = await fetch('${window.location.origin}/api/users/current');
+        const response = await fetch(`${window.location.origin}/api/users/current`);
         if (!response.ok) throw new Error('Failed to fetch user');
 
         const data = await response.json();
@@ -252,7 +249,7 @@ let userPreferences = { background: '/assets/img/background.png', taskbarApps: [
 
 async function fetchPreferences() {
     try {
-        const response = await fetch('${window.location.origin}/api/users/getPreferences');
+        const response = await fetch(`${window.location.origin}/api/users/getPreferences`);
         if (!response.ok) throw new Error('Failed to fetch preferences');
         userPreferences = await response.json();
         applyPreferences();
