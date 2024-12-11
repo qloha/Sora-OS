@@ -19,7 +19,6 @@ function toggleStartMenu() {
     startMenu.style.display = (startMenu.style.display === 'none' || !startMenu.style.display) ? 'block' : 'none';
 }
 
-// Hide Start Menu when clicking outside
 window.addEventListener('click', function(event) {
     const startMenu = document.getElementById('startMenu');
     const startButton = document.querySelector('.taskbar-start');
@@ -28,28 +27,19 @@ window.addEventListener('click', function(event) {
     }
 });
 
-// Define functions for navigation and apps
 async function home() {
-    window.location.href = '/';
+    window.location.href = '${window.location.origin}/';
 }
 
 async function lock() {
-    window.location.href = '/relogin';
+    window.location.href = '${window.location.origin}/relogin';
 }
 
 async function logout() {
-    await fetch('/api/users/logout', { method: 'POST' });
-    window.location.href = '/login';
+    await fetch('${window.location.origin}/api/users/logout', { method: 'POST' });
+    window.location.href = '${window.location.origin}/login';
 }
 
-/*
-async function browser() {
-    console.log("browser");
-}
-
-async function fileExplorer() {
-    console.log("file explorer");
-}*/
 function createIframe(iframeId, src, width, height) {
     let iframe = document.getElementById(iframeId);
     if (!iframe) {
@@ -73,7 +63,6 @@ function createIframe(iframeId, src, width, height) {
     return iframe;
 }
 
-// Function to remove an iframe
 function removeIframe(iframeId) {
     const iframe = document.getElementById(iframeId);
     if (iframe) {
@@ -81,7 +70,6 @@ function removeIframe(iframeId) {
     }
 }
 
-// Open and close app functions using dynamic iframe creation
 async function openApp(iframeId, src, width, height) {
     const iframe = createIframe(iframeId, src, width, height);
     iframe.style.display = 'block';
@@ -92,7 +80,7 @@ async function closeApp(iframeId) {
 }
 
 async function openSnakeApp() {
-    await openApp('snakeAppIframe', '/apps/snakeApp.html', 420, 420);
+    await openApp('snakeAppIframe', '${window.location.origin}/apps/snakeApp.html', 420, 420);
 }
 
 async function closeSnakeApp() {
@@ -100,7 +88,7 @@ async function closeSnakeApp() {
 }
 
 async function openPongApp() {
-    await openApp('pongAppIframe', '/apps/pongApp.html', 760, 600);
+    await openApp('pongAppIframe', '${window.location.origin}/apps/pongApp.html', 760, 600);
 }
 
 async function closePongApp() {
@@ -108,7 +96,7 @@ async function closePongApp() {
 }
 
 async function openSettingsApp() {
-    await openApp('settingsAppIframe', '/apps/settingsApp.html', 600, 400);
+    await openApp('settingsAppIframe', '${window.location.origin}/apps/settingsApp.html', 600, 400);
 }
 
 async function closeSettingsApp() {
@@ -119,38 +107,26 @@ async function closeSettingsApp() {
 
 
 const apps = [
-    /*
-    {
-        name: 'Browser',
-        icon: '/assets/img/browser.png',
-        action: () => browser()
-    },
-    {
-        name: 'File Explorer',
-        icon: '/assets/img/file-explorer.png',
-        action: () => fileExplorer()
-    },
-    */
     {
         name: 'Settings',
-        icon: '/assets/img/settings.png',
+        icon: '${window.location.origin}/assets/img/settings.png',
         action: () => openSettingsApp()
     },
     {
         name: 'Pong',
-        icon: '/assets/img/pong.png',
+        icon: '${window.location.origin}/assets/img/pong.png',
         action: () => openPongApp()
     },
     {
         name: 'Snake',
-        icon: '/assets/img/snake.png',
+        icon: '${window.location.origin}/assets/img/snake.png',
         action: () => openSnakeApp()
     },
 ];
 
 async function fetchUserName() {
     try {
-        const response = await fetch('/api/users/current');
+        const response = await fetch('${window.location.origin}/api/users/current');
         if (!response.ok) throw new Error('Failed to fetch user');
 
         const data = await response.json();
@@ -216,7 +192,6 @@ function renderStartMenu() {
 
     startMenuContainer.appendChild(navigationContainer);
 
-    // Add user info and power options
     const divider = document.createElement('hr');
     startMenuContainer.appendChild(divider);
 
@@ -224,7 +199,7 @@ function renderStartMenu() {
     userInfo.classList.add('user-info');
 
     const userAvatar = document.createElement('img');
-    userAvatar.src = '/assets/img/user.png';
+    userAvatar.src = '${window.location.origin}/assets/img/user.png';
     userAvatar.alt = 'User Avatar';
     userAvatar.classList.add('user-avatar');
 
@@ -273,11 +248,11 @@ function setUserName(name) {
 }
 
 let currentUser = null;
-let userPreferences = { background: '/assets/img/background.png', taskbarApps: [] };
+let userPreferences = { background: '${window.location.origin}/assets/img/background.png', taskbarApps: [] };
 
 async function fetchPreferences() {
     try {
-        const response = await fetch('/api/users/getPreferences');
+        const response = await fetch('${window.location.origin}/api/users/getPreferences');
         if (!response.ok) throw new Error('Failed to fetch preferences');
         userPreferences = await response.json();
         applyPreferences();
@@ -295,7 +270,6 @@ function applyPreferences() {
     }
 }
 
-// Context menu for desktop
 document.addEventListener('contextmenu', (event) => {
     const isDesktop = event.target.classList.contains('desktop') || event.target === document.body;
     if (!isDesktop) return;
@@ -324,7 +298,6 @@ document.addEventListener('contextmenu', (event) => {
 })
 
 
-// Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
     fetchPreferences().catch(console.error);
     renderDesktopIcons();

@@ -73,10 +73,9 @@
         font-weight: bold;
         margin-bottom: 15px;
         color: #333;
-        text-align: center; /* Center the title */
+        text-align: center;
     }
 
-    /* Input Fields */
     .settings-content input[type="text"] {
         width: 100%;
         padding: 10px;
@@ -93,7 +92,6 @@
         outline: none;
     }
 
-    /* Apply Button */
     .settings-content button {
         padding: 10px 20px;
         font-size: 14px;
@@ -110,7 +108,6 @@
         transform: scale(1.05);
     }
 
-    /* Close Button (Top Center) */
     .settings-app::before {
         content: '×';
         position: absolute;
@@ -126,17 +123,6 @@
     .settings-app::before:hover {
         color: #000;
         transform: scale(1.1);
-    }
-
-    /* Background Overlay */
-    .settings-app-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.4); /* Dark transparent overlay */
-        z-index: 1000;
     }
 
     .close-btn {
@@ -190,11 +176,11 @@
 <script>
     async function loadUserPreferences() {
         try {
-            const response = await fetch('/api/users/getPreferences');
+            const response = await fetch('${window.location.origin}/api/users/getPreferences');
             if (!response.ok) throw new Error('Failed to load preferences');
 
             const { background } = await response.json();
-            document.getElementById('background').value = background || '/assets/img/background.png';
+            document.getElementById('background').value = background || '${window.location.origin}/assets/img/background.png';
         } catch (error) {
             console.error(error);
         }
@@ -205,12 +191,12 @@
         const feedback = document.getElementById('desktopFeedback');
 
         try {
-            await fetch('/api/users/savePreferences', {
+            await fetch('${window.location.origin}/api/users/savePreferences', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ background })
             });
-            parent.document.body.style.backgroundImage = `url(${background})`; // Set background on parent
+            parent.document.body.style.backgroundImage = `url(${background})`;
             feedback.textContent = 'Applied!';
             feedback.style.color = 'green';
         } catch (error) {
@@ -219,7 +205,6 @@
         }
     }
 
-    // Show specific settings content (only Desktop now)
     function showSettingsContent(tab) {
         document.querySelectorAll('.content-section').forEach(section => section.style.display = 'none');
         document.getElementById(tab).style.display = 'block';

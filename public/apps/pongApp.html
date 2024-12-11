@@ -132,7 +132,7 @@
   let paddleSpeed = 6;
   let ballSpeed = 5;
   let gameRunning = false;
-  let gameMode = 'two'; // 'single' or 'two'
+  let gameMode = 'two';
   let leftScore = 0;
   let rightScore = 0;
 
@@ -402,12 +402,6 @@
   function closeApp() {
     window.parent.closePongApp();
   }
-
-  document.querySelector('.close-btn').addEventListener('mouseover', () => {
-    console.log('Mouse is over the close button.');
-  });
-
-  // Initialize to show main menu
   showMainMenu();
 </script>
 </body>
