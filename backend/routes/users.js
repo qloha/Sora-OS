@@ -1,10 +1,7 @@
-// routes/users.js
-
 const express = require('express');
 const router = express.Router();
 const users = require('../userdata.js');
 
-// Utility function to find user by username
 const findUser = (username) => users.find(user => user.username === username);
 
 router.post('/login', (req, res) => {
@@ -51,7 +48,7 @@ router.post('/savePreferences', (req, res) => {
         return res.status(404).json({ message: 'User not found' });
     }
 
-    user.preferences = { ...user.preferences, ...req.body }; // Update only provided fields
+    user.preferences = { ...user.preferences, ...req.body };
     res.json({ success: true });
 });
 
