@@ -180,7 +180,7 @@
             if (!response.ok) throw new Error('Failed to load preferences');
 
             const { background } = await response.json();
-            document.getElementById('background').value = background || '${window.location.origin}/assets/img/background.png';
+            document.getElementById('background').value = background || '/assets/img/background.png';
         } catch (error) {
             console.error(error);
         }

@@ -28,16 +28,16 @@ window.addEventListener('click', function(event) {
 });
 
 async function home() {
-    window.location.href = '${window.location.origin}/';
+    window.location.href = '/';
 }
 
 async function lock() {
-    window.location.href = '${window.location.origin}/relogin';
+    window.location.href = '/relogin';
 }
 
 async function logout() {
     await fetch('${window.location.origin}/api/users/logout', { method: 'POST' });
-    window.location.href = '${window.location.origin}/login';
+    window.location.href = '/login';
 }
 
 function createIframe(iframeId, src, width, height) {
@@ -80,7 +80,7 @@ async function closeApp(iframeId) {
 }
 
 async function openSnakeApp() {
-    await openApp('snakeAppIframe', '${window.location.origin}/apps/snakeApp.html', 420, 420);
+    await openApp('snakeAppIframe', '/apps/snakeApp.html', 420, 420);
 }
 
 async function closeSnakeApp() {
@@ -88,7 +88,7 @@ async function closeSnakeApp() {
 }
 
 async function openPongApp() {
-    await openApp('pongAppIframe', '${window.location.origin}/apps/pongApp.html', 760, 600);
+    await openApp('pongAppIframe', '/apps/pongApp.html', 760, 600);
 }
 
 async function closePongApp() {
@@ -96,7 +96,7 @@ async function closePongApp() {
 }
 
 async function openSettingsApp() {
-    await openApp('settingsAppIframe', '${window.location.origin}/apps/settingsApp.html', 600, 400);
+    await openApp('settingsAppIframe', '/apps/settingsApp.html', 600, 400);
 }
 
 async function closeSettingsApp() {
@@ -109,17 +109,17 @@ async function closeSettingsApp() {
 const apps = [
     {
         name: 'Settings',
-        icon: '${window.location.origin}/assets/img/settings.png',
+        icon: '/assets/img/settings.png',
         action: () => openSettingsApp()
     },
     {
         name: 'Pong',
-        icon: '${window.location.origin}/assets/img/pong.png',
+        icon: '/assets/img/pong.png',
         action: () => openPongApp()
     },
     {
         name: 'Snake',
-        icon: '${window.location.origin}/assets/img/snake.png',
+        icon: '/assets/img/snake.png',
         action: () => openSnakeApp()
     },
 ];
@@ -199,7 +199,7 @@ function renderStartMenu() {
     userInfo.classList.add('user-info');
 
     const userAvatar = document.createElement('img');
-    userAvatar.src = '${window.location.origin}/assets/img/user.png';
+    userAvatar.src = '/assets/img/user.png';
     userAvatar.alt = 'User Avatar';
     userAvatar.classList.add('user-avatar');
 
@@ -248,7 +248,7 @@ function setUserName(name) {
 }
 
 let currentUser = null;
-let userPreferences = { background: '${window.location.origin}/assets/img/background.png', taskbarApps: [] };
+let userPreferences = { background: '/assets/img/background.png', taskbarApps: [] };
 
 async function fetchPreferences() {
     try {
